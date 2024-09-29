@@ -1,0 +1,35 @@
+<h2>{{ title }}</h2>
+<p>list as follows {{ title }}</p>
+
+<table>
+    <tr>
+        <th>No.</th>
+        <th>Name</th>
+        <th>Topic</th>
+        <th>Level</th>
+        <th>LeetCode</th>
+    </tr>
+</table>
+{{# each mlist }}
+    <p>{{ this }}</p>
+{{/each}}
+
+<form action="/algorithms" method="post">
+<div class="input">
+    <label for="input">Problem</label>
+    <input type="text" id="algorname" name="algorname">
+</div>
+<div>
+    <select name="prolang" id="prolang"></select>
+      <option value="Java">Java</option>
+      <option value="JavaScript">JavaScript</option>
+    </select>
+</div>
+<textarea id="code" name="code"></textarea>
+<button type="submit">INSERT</button>
+</form>
+
+<script type="text/javascript">
+var x = 15;
+console.log(x);
+</script>

@@ -13,9 +13,13 @@ router.get('/', async function(req, res, next) {
   await client.connect();
   console.log("db connected");
   let tb = await collection.find({}).toArray();
-  console.log(tb);
+  // console.log(tb);
 
   res.render('index', { title: 'HomePage for Bobby', condition: true, myList: tb });
+});
+
+router.get('/algorithm', function(req, res, next) {
+  res.send('respond with a resource');
 });
 
 /* POST Database API*/

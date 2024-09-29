@@ -7,6 +7,9 @@ var hbs = require('express-handlebars');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
+var algorithmRouter = require('./routes/algorithm');
+
+const { connectMongo } = require('./util/mongoDB');
 
 var app = express();
 
@@ -21,8 +24,26 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+// Connect DB
+connectMongo('mydb');
+
+// CORS
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header(
+    'Access-Control-Allow-Headers',
+    'Origin, X-Requested-With, Content-Type, Accept, Authorization' 
+  );
+  if(req.method === 'OPTIONS') {
+    res.header('Access-Control-Allow-Methods', 'PUT, POST, PATCH, DELETE, GET');
+    return res.status(200).json({});
+  }
+  next();
+});
+
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+app.use('/algorithms', algorithmRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
