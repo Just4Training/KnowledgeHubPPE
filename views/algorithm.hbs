@@ -1,35 +1,58 @@
 <h2>{{ title }}</h2>
-<p>list as follows {{ title }}</p>
 
-<table>
-    <tr>
-        <th>No.</th>
-        <th>Name</th>
-        <th>Topic</th>
-        <th>Level</th>
-        <th>LeetCode</th>
-    </tr>
-</table>
-{{# each mlist }}
-    <p>{{ this }}</p>
-{{/each}}
-
-<form action="/algorithms" method="post">
-<div class="input">
-    <label for="input">Problem</label>
-    <input type="text" id="algorname" name="algorname">
+<div class="container mt-5">
+    <table class="table table-striped table-hover">
+        <h3 class="mb-4">Problem List</h3>
+        <thead class="thead-dark">
+            <tr>
+                <th>No.</th>
+                <th>Name</th>
+                <th>Topic</th>
+                <th>Level</th>
+                <th>LeetCode</th>
+                <th>Solution</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{# each problems }}
+            <tr>
+                <th scope="row">{{ @index }}</th>
+                <td>{{ this.problemName }}</td>
+                <td>Sorting</td>
+                <td>Easy</td>
+                <td>28</td>
+                <td><a class="btn btn-primary" href="/algorithms/{{ this.id }}" role="button">Link</a></td>
+            </tr>
+            {{/each}}
+        </tbody>
+    </table>
 </div>
-<div>
-    <select name="prolang" id="prolang"></select>
-      <option value="Java">Java</option>
-      <option value="JavaScript">JavaScript</option>
-    </select>
-</div>
-<textarea id="code" name="code"></textarea>
-<button type="submit">INSERT</button>
-</form>
 
-<script type="text/javascript">
-var x = 15;
-console.log(x);
-</script>
+<div class="container mt-5">
+    <div class="border p-4 rounded">
+        <h3 class="mb-4">Add a new Problem</h3>
+        <form action="/algorithms" method="post">
+        <div class="form-group">
+            <label for="problemName">Problem Name</label>
+            <input type="problemName" class="form-control" id="problemName" name="problemName">
+        </div>
+        <div class="form-group">
+            <label for="leetcode">LeetCode</label>
+            <input type="text" class="form-control" id="leetcode" name="leetcode">
+        </div>
+        <div class="form-group">
+            <label for="topic">Example select</label>
+            <select class="form-control" id="topic" name="topic">
+            <option value="" disabled selected>Select your topic</option>
+            <option value="Sorting">Sorting</option>
+            <option value="Stack & Queue">Stack & Queue</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="description">Description</label>
+            <textarea class="form-control" id="description" name="description" rows="3"></textarea>
+        </div>
+        <input class="btn btn-primary" type="submit" value="Submit">
+        </form>
+    </div>
+</div>

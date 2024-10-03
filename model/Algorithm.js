@@ -1,23 +1,15 @@
 const mongoose = require('mongoose');
 
-class Algorithm {
-    id;
-    pid;
-    lang;
-    solution;
-    data;
-    user;
+const algorithmSchema = mongoose.Schema({
+    pid: mongoose.Types.ObjectId,
+    lang: String,
+    solution: String,
+    data: mongoose.Schema.Types.Mixed,
+    user: mongoose.Types.ObjectId,
+    location: String,
+    date: Date
+}, { collection: collection });
 
-    createMongooseObj(collection) {
-        const algorithmSchema = mongoose.Schema({
-            _id: mongoose.Schema.Types.ObjectId,
-            pid: mongoose.Schema.Types.ObjectId,
-            lang: String,
-            solution: String,
-        }, { collection: collection });
-
-        const Algorithm = mongoose.model('Algorithm', algorithmSchema, 'test');
-    }
-}
+const Algorithm = mongoose.model('Algorithm', algorithmSchema, 'test');
 
 module.exports = Algorithm;
