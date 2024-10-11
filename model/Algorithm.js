@@ -8,7 +8,7 @@ const algorithmSchema = mongoose.Schema({
     user: mongoose.Types.ObjectId,
     location: String,
     date: Date
-}, { collection: collection });
+}, { collection: 'test' });
 
 const Algorithm = mongoose.model('Algorithm', algorithmSchema, 'test');
 

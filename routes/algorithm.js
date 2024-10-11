@@ -1,27 +1,27 @@
 var express = require('express');
 var router = express.Router();
 const multer = require('multer');
-var fs = require('fs');
+const path = require('path');
+// var fs = require('fs');
 
-// var Algorithm = require('../model/Algorithm');
+const Algorithm = require('../model/Algorithm');
 const Problem = require('../model/Problem');
 
-const path = '../Code/';
+const filePath = '../Code/';
 
 // Setup storage engine for multer
-const upload = multer({ dest: path});
-// const storage = multer.diskStorage({
-//     destination: function (req, file, cb) {
-//         cb(null, 'uploads/'); // Directory where files will be stored
-//     },
-//     filename: function (req, file, cb) {
-//         const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-//         cb(null, file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname)); // Save file with a unique name
-//     }
-// });
+const storage = multer.diskStorage({
+    destination: function (req, res, cb) {
+        cb(null, filePath); // Directory where files will be stored
+    },
+    filename: function (req, file, cb) {
+        const uniqueSuffix = Date.now() + '-';
+        cb(null, file.fieldname + '-' + uniqueSuffix + file.originalname); // Save file with a unique name
+    }
+});
 
 // File upload middleware
-// const upload = multer({ storage: storage });
+const upload = multer({ storage: storage });
 
 /* GET algorithm listing. */
 router.get('/', async function(req, res, next) {
@@ -76,21 +76,25 @@ router.post('/', async function(req, res) {
         });
 });
 
-router.post('/upload', upload.single('file'), async function(req, res) {
-    console.log(111111);
+router.post('/upload', upload.single('file'), function(req, res) {
     try{
         console.log(req.file);
-        res.status(200).json({data: req.file});
+        const fileData = req.file.buffer.toString('utf-8');
+        console.log(filename);
+        console.log(new Date());
+
+        // const algorithm = new Algorithm({
+        //     lang: path.extname(file.originalname);
+        //     solution: String,
+        //     location: String,
+        //     date: Date
+        // });
+        res.redirect('/algorithms');
     } catch (err) {
         console.log(err);
     }
 
-    // const problem = new Problem({
-    //     problemName: req.body.problemName,
-    //     description: req.body.description,
-    //     leetcode: req.body.leetcode,
-    //     topic: req.body.topic
-    // });
+
 
     // const fName = path.concat(problem.problemName).concat('.txt');
 
