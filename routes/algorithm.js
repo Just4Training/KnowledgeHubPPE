@@ -42,6 +42,7 @@ router.get('/:problemId', async function(req, res) {
 });
 
 router.post('/', async function(req, res) {
+    console.log(req.body);
     const problem = new Problem({
         problemName: req.body.problemName,
         description: req.body.description,
