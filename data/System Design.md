@@ -1,39 +1,26 @@
 # System Design
-## System Design Template
-1. Requirement analysis
-2. API
-3. structure
-4. Dive deep
 
 ## Key Concept
-### Scaling
-Work Distribution: The first challenge of horizontal scaling is getting the work to the right machine. This is often done via a load balancer
 
-- Round-robin
-- Queueing System
 
-Data Distribution: Sharding
-Consistency
+> **Consistency:** Strong consistency means lock before next move, weak consistency means eventually consistent. Use locking methods to achieve consistency.
 
-Amazon Elastic Container Service (ECS) is a fully managed container orchestration service that helps you to more efficiently deploy, manage, and scale containerized applications. [AWS ECS](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/service-auto-scaling.html)
-### Locking: 
-Locking is the process of ensuring that only one client can access a shared resource at a time.
-- Pessimistic Locking: database is directly utilized to lock a specific ticket row, ensuring exclusive access to the first user trying to book it. Done by *SELECT FOR UPDATE* SQL.
-- Status & Expiration Time with Cron: adding a status field and expiration time on the ticket table.
-- Distributed Lock with TTL: use a key-value store to store a lock and then use the atomicity of the key-value store to ensure that only one process can acquire the lock at a time.
-
-#### Distributed Locks
-1. **Locking Mechanisms:** There are different ways to implement distributed locks. One common implementation uses Redis and is called **Redlock**. Redlock uses multiple Redis instances to ensure that a lock is acquired and released in a safe and consistent manner.
-2. **Lock Expiry:** Distributed locks can be set to expire after a certain amount of time. This is important for ensuring that locks don't get stuck in a locked state if a process crashes or is killed.
-3. **Locking Granularity:** Distributed locks can be used to lock a single resource or a group of resources. For example, you might want to lock a single ticket in a ticketing system or you might want to lock a group of tickets in a section of a stadium.
-4. **Deadlocks:** Deadlocks can occur when two or more processes are waiting for each other to release a lock. 
-
-Communication Protocols: Websockets are necessary if you need realtime, bidirectional communication between the client and the server
+: 
 Security
 
+
+
+### Monitoring
 Good reference for System Design interviews
-- [Hello Interview](https://www.hellointerview.com/learn/system-design/in-a-hurry/introduction)
+
 - [Postman API Design](https://blog.postman.com/what-is-caching/)
+
+#### Rate Limiting
+Rate limiting is a strategy for limiting network traffic. It puts a cap on how often someone can repeat an action within a certain timeframe
+
+
+## Docker
+Docker is a container technology. Container is a package of code and dependencies to run that code.
 
 ## Redis
 - Redis is a **single thread, in-memory** data structure **server**.
@@ -53,6 +40,9 @@ Redis can run as a single node, with a high availability (HA) replica, or as a c
 
 ### Redis as a Cache
 ![Redis as Cache](https://d248djf5mc6iku.cloudfront.net/excalidraw/03fba3a54a617b9dae9cf4ea8edfb691)
+### Redis as Leaderboards
+Redis can sort set
+[Redis Sort](https://www.hellointerview.com/learn/system-design/deep-dives/redis#redis-for-leaderboards)
 ### Redis as Rate Limiting
 Situation: Redis limits access to expensive service
 How: 
@@ -62,6 +52,14 @@ How:
 The basic idea behind Redis streams is that we want to durably add items to a log and then have a distributed mechanism for consuming items from these logs.
 ![Redis as Stream](https://d248djf5mc6iku.cloudfront.net/excalidraw/f52b1452c753d9cfd127d58bfd1792c1)
 
+### Redus for Distributed Lock
+
+[redlock](https://redis.io/docs/latest/develop/use/patterns/distributed-locks/#the-redlock-algorithm)
+### Redis Pub/Sub
+Good for chatting room
+Subscribing to a channel: SUBSCRIBE crazy_channel
+Publishing to a chaneel: PUBLISH crazy_channel "This channel is hella crazy"
+
 ### Kafka
 **Apache Kafka** is an open-source distributed event streaming platform that can be used either as a **message queue** or as a **stream processing system**.
 
@@ -70,6 +68,39 @@ One of the fundamental ideas behind Kafka: messages sent and received through Ka
 A message consists of one required field, the value, and three optional fields: a key, a timestamp, and headers.
 
 ![Kafka Message](https://d248djf5mc6iku.cloudfront.net/excalidraw/ea72a3302bc0beca8e45c13c70b04b10)
+
+### Elasticsearch
+#### Basic Concepts
+    The important concepts of Elasticsearch from a client perspective are documents, indices, mappings, and fields.
+
+![Elastic Search](https://d248djf5mc6iku.cloudfront.net/excalidraw/8b4a98e0a2659dc35b2e8f1226e77430)
+
+- Document: Documents are the individual units of data that you're searching over. 
+- Indices: An index is a collection of documents. Each document is associated with a unique ID and a set of fields, which are key-value pairs that contain the data you're searching over.
+- Mappings and Fields: a mapping is the schema of the index. It defines the fields that the index will have, the data type of each field, and any other properties like how the field is processed and indexed.
+
+#### Basic Use
+- Create an Index: A simple PUT request will create an index with a dynamic mapping, 1 shard, and 1 replica
+- Set a Mapping: If dynamic mapping isn't appropriate (maybe most of the fields in my data aren't searchable), I can set a mapping for the index up front. This lets Elasticsearch know that certain fields should be treated as searchable and what types to expect in those fields
+- Add Documents: Each of POST requests will return a document ID along with data about how the document was persisted across the cluster.
+- Updating Documents: Updating a document is similar to creating a document, but you need to specify the document ID in the URL.
+- Elasticsearch is distributed, asynchronous, and concurrent. Your request is potentially sent to many different nodes and the requests can arrive out of order.
+- Search: 
+- Sort:
+
+## System design Pattern
+- Single DB with CRUD service
+![CRUD](https://d248djf5mc6iku.cloudfront.net/excalidraw/a1fba7e81a4a3fcc60cebeb61bc1c128)
+- Async job worker pool
+![Async](https://d248djf5mc6iku.cloudfront.net/excalidraw/da47f13932e254edd8227cc5f09d3581)
+
+## Event Driven
+An event-driven architecture uses events to trigger and communicate between decoupled services and is common in modern applications built with microservices. An event is a change in state, or an update, like an item being placed in a shopping cart on an e-commerce website.
+
+Event-driven architectures have three key components: event producers (Event Emitter), event routers(Message Broker or Event Bus), and event consumers. A producer publishes an event to the router, which filters and pushes the events to consumers. Producer services and consumer services are decoupled, which allows them to be scaled, updated, and deployed independently.
+
+### EventBridge
+EventBridge is a serverless service that uses events to connect application components together, making it easier for you to build scalable event-driven applications. Event-driven architecture is a style of building loosely-coupled software systems that work together by emitting and responding to events. Event-driven architecture can help you boost agility and build reliable, scalable applications.
 
 ## API Design
 API components:
@@ -95,6 +126,9 @@ API components:
 
 reference: [AWS -> REST API](https://aws.amazon.com/what-is/restful-api/)
 
+### WebSocket API
+The WebSocket API makes it possible to open a two-way interactive communication session between the user's browser and a server. With this API, you can send messages to a server and receive responses without having to poll the server for a reply.
+
 ### API Gateway
 API Gateway handles all the tasks involved in accepting and processing up to hundreds of thousands of concurrent API calls, including traffic management, CORS support, authorization and access control, throttling, monitoring, and API version management.
 
@@ -105,20 +139,16 @@ For example, if the sytem receives a request to GET /users/123, the API gateway 
 ### Open API
 ![OPEN API](https://www.openapis.org/wp-content/uploads/sites/3/2023/05/What-is-OpenAPI-Simple-API-Lifecycle-Vertical.png)
 
+#### PUT vs. PATCH
+[stackoverflow](https://stackoverflow.com/questions/28459418/use-of-put-vs-patch-methods-in-rest-api-real-life-scenarios)
+
 #### prefetching, prerendering, and service worker precaching
 #### Lazy load
 
 ## Load Balancer
+- Algorithms: Round-robin
+- Examples: [AWS Elastic Load Balancer](https://docs.aws.amazon.com/elasticloadbalancing/latest/userguide/what-is-load-balancing.html), NGINX
 
-## Queue
-1. **Message Ordering:** Most queues are FIFO (first in, first out), meaning that messages are processed in the order they were received. However, some queues (like Kafka) allow for more complex ordering guarantees, such as ordering based on a specified priority or time.
-2. **Retry Mechanisms:** Many queues have built-in retry mechanisms that attempt to re-deliver a message a certain number of times before considering it a failure. You can configure retries, including the delay between attempts, and the maximum number of attempts.
-3. **Dead Letter Queues:** Dead letter queues are used to store messages that cannot be processed. They're useful for **debugging** and **auditing**, as it allows you to inspect messages that failed to be processed and understand why they failed.
-4. **Scaling with Partitions:** Queues can be partitioned across multiple servers so that they can scale to handle more messages. Each partition can be processed by a different set of workers. Just like databases, you will need to specify **a partition key** to ensure that related messages are stored in the same partition.
-5. **Backpressure:** Backpressure is a way of slowing down the production of messages when the queue is overwhelmed. This helps prevent the queue from becoming a bottleneck in your system. For example, if a queue is full, you might want to reject new messages or slow down the rate at which new messages are accepted, potentially returning an error to the user or producer.
-
-### AWS SQS
-[Amazon Simple Queue Service](https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/welcome.html)
 
 ## Streaming / Event Sourcing
 Event sourcing is a technique where changes in application state are stored as a sequence of events. These events can be replayed to reconstruct the application's state at any point in time, making it an effective strategy for systems that require a detailed audit trail or the ability to reverse or replay transactions.
@@ -134,33 +164,19 @@ Event sourcing is a technique where changes in application state are stored as a
 3. CDN
 4. Database
 
+### Things to know
+**Eviction Policy**
+- LRU
+- FIFO
+- LFU
+
+**Invalidation**
+- Invalidate cache when update Database
+
+**Write**
+
 
 ## Database
-- invert index
-- full text indexes
-### Database Types & Usage
-| Type                        | Usage                                                | Examples                                           |
-|-----------------------------|------------------------------------------------------|----------------------------------------------------|
-| Relational Database (RDBMS) | Customer, Product, Financial transaction data, etc   | MySQL, PostgreSQL, Oracle Database                 |
-| Key-Value Store             | Session Storage, Caching, real-time data processing  | Redis, DynamoDB                                    |
-| Document DataBase           | Document-oriented info, CMS, reviews, json, etc      | MongoDB, Couchbase, Apache CouchDB                 |
-| Graph Databse               | social Network, recommendation systems               | Neo4j, Amazon Neptune                              |
-| In-Memory Database          | RAM, Online Gaming, High-Frequency Trading           | Redis, Memcached                                   |
-| Time-Serise Database (TSDB) | Time-stamped or time-series data, Monitor, IoT       | InfluxDB, TimescaleDB, Prometheus                  |
-| Wide-Column Stores          | Web analytics and user tracking, Real-Time Analytics | Apache Cassandra, Apache HBase, Google Bigtable    |
-| Object-Oriented Database    | OOP application, multi-media                         | ObjectDB, db4o                                     |
-| Text Search Database        | Seach Engine, Log analysis                           | Elastic Search, Apache Solr, Sphinx                |
-| Spatial Database            | geographical or spatial information.                 | PostGIS (extension for PostgreSQL), Oracle Spatial |
-| Vector Database             |  Image and Video Search                              | Faiss, Milvus, Pinecone                            |
-| Blob Datastore              | Files, images, audio and videos, CDN                 | Amazon S3, Azure Blob Storage, HDFS                |
-
-ref: [15 types of Database](https://blog.algomaster.io/p/15-types-of-databases)
-### SQL vs NoSQL
-RDBMS Transactions: Transactions are a way of grouping multiple operations together into a single atomic operation. For example, if you have a users table and a posts table, you might want to create a new user and a new post for that user at the same time. If you do this in a transaction, either both operations will succeed or both will fail. This is important for maintaining data integrity.
-- ACID: Atomicity, Consistency, Isolation and Durability
-	![NoSQL](https://d248djf5mc6iku.cloudfront.net/excalidraw/641b9db6ecff33edf227cec61e2f6d86)
-
-
 
 ### Blob Storage
 Blob storage services are simple. You can upload a blob of data and that data is stored and get back a URL. You can then use this URL to download the blob of data.
@@ -204,9 +220,19 @@ JSON Web token (JWT), A JWT contains all the required information about an entit
 #### AWS IAM
 AWS Identity and Access Management (IAM) is a web service that helps you securely control access to AWS resources.
 ref: [How IAM works](https://docs.aws.amazon.com/IAM/latest/UserGuide/intro-structure.html)
+#### API
+[API](https://github.com/shieldfy/API-Security-Checklist?tab=readme-ov-file#input)
+
 
 ## Serverless & Docker
 - AWS offers **Serverless technologies** for running code, managing data, and integrating applications, all without managing servers.
 - AWS Lambda: You can use AWS Lambda to run code without provisioning or managing servers. [Lambda](https://docs.aws.amazon.com/lambda/latest/dg/welcome.html)
 - AWS VPC: Amazon Virtual Private Cloud (Amazon VPC), you can launch AWS resources in a logically isolated virtual network that you've defined. This virtual network closely resembles a traditional network that you'd operate in your own data center, with the benefits of using the scalable infrastructure of AWS
 - AWS 
+
+#### Amazon CloudFront
+Amazon CloudFront is a web service that speeds up distribution of your static and dynamic web content, such as .html, .css, .js, and image files, to your users. CloudFront delivers your content through a worldwide network of data centers called edge locations. When a user requests content that you're serving with CloudFront, the request is routed to the edge location that provides the lowest latency (time delay), so that content is delivered with the best possible performance.
+
+If the content is already in the edge location with the lowest latency, CloudFront delivers it immediately.
+
+If the content is not in that edge location, CloudFront retrieves it from an origin that you've defined—such as an Amazon S3 bucket, a MediaPackage channel, or an HTTP server (for example, a web server) that you have identified as the source for the definitive version of your content.

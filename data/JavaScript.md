@@ -36,3 +36,16 @@ Both used to include **modules** within your JS file, diff as follows:
 | runs at the beginning of the file| anywhere        |
 | can selectively load             | load whole piece|
 | aynchronous                      | synchronous     |
+
+### Event
+Events are things that happen in the system you are programming — the system produces (or "fires") a signal of some kind when an event occurs, and provides a mechanism by which an action can be automatically taken (that is, some code running) when the event occurs. Events are fired inside the browser window, and tend to be attached to a specific item that resides in it.
+
+- The user selects, clicks, or hovers the cursor over a certain element.
+- The user chooses a key on the keyboard.
+- The user resizes or closes the browser window.
+- A web page finishes loading.
+- A form is submitted.
+- A video is played, paused, or ends.
+- An error occurs.
+
+To react to an event, you attach an event handler to it
