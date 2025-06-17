@@ -4,17 +4,17 @@ const multer = require('multer');
 const path = require('path');
 // var fs = require('fs');
 
-const Algorithm = require('../model/Algorithm');
-const Problem = require('../model/Problem');
+const Algorithm = require('../../model/Algorithm');
+const Problem = require('../../model/Problem');
 
 const filePath = '../Code/';
 
 // Setup storage engine for multer
 const storage = multer.diskStorage({
-    destination: function (req, res, cb) {
+    destination: function (req: Request, res, cb) {
         cb(null, filePath); // Directory where files will be stored
     },
-    filename: function (req, file, cb) {
+    filename: function (req: Request, file, cb) {
         const uniqueSuffix = Date.now() + '-';
         cb(null, file.fieldname + '-' + uniqueSuffix + file.originalname); // Save file with a unique name
     }
@@ -24,7 +24,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 /* GET algorithm listing. */
-router.get('/', async function(req, res, next) {
+router.get('/', async function(req: Request, res, next) {
     const problems = await Problem.find({});
     probList = [];
     problems.forEach((obj) => {
@@ -35,13 +35,13 @@ router.get('/', async function(req, res, next) {
     res.render('algorithm', {problems: probList});
 });
 
-router.get('/:problemId', async function(req, res) {
+router.get('/:problemId', async function(req: Request, res) {
     const id = req.params.problemId;
     const problem = await Problem.findById(id).lean();
     res.render('problem', { problem });
 });
 
-router.post('/', async function(req, res) {
+router.post('/', async function(req: Request, res) {
     console.log(req.body);
     const problem = new Problem({
         problemName: req.body.problemName,
@@ -77,7 +77,7 @@ router.post('/', async function(req, res) {
         });
 });
 
-router.post('/upload', upload.single('file'), function(req, res) {
+router.post('/upload', upload.single('file'), function(req: Request, res) {
     try{
         console.log(req.file);
         const fileData = req.file.buffer.toString('utf-8');
