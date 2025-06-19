@@ -1,38 +1,49 @@
-var express = require('express');
-var router = express.Router();
-const multer = require('multer');
-const path = require('path');
+import express, { Request, Response } from 'express';
+import logger from '@/util/logger';
+const router = express.Router();
+// const multer = require('multer');
+// const path = require('path');
 // var fs = require('fs');
 
-const Algorithm = require('../../model/Algorithm');
-const Problem = require('../../model/Problem');
+// const Algorithm = require('../../model/Algorithm');
+import Problem from '../models/Problem';
+import { describe } from 'node:test';
 
 const filePath = '../Code/';
 
 // Setup storage engine for multer
-const storage = multer.diskStorage({
-    destination: function (req: Request, res, cb) {
-        cb(null, filePath); // Directory where files will be stored
-    },
-    filename: function (req: Request, file, cb) {
-        const uniqueSuffix = Date.now() + '-';
-        cb(null, file.fieldname + '-' + uniqueSuffix + file.originalname); // Save file with a unique name
-    }
-});
+// const storage = multer.diskStorage({
+//     destination: function (req: Request, res: Response, cb) {
+//         cb(null, filePath); // Directory where files will be stored
+//     },
+//     filename: function (req: Request, file, cb) {
+//         const uniqueSuffix = Date.now() + '-';
+//         cb(null, file.fieldname + '-' + uniqueSuffix + file.originalname); // Save file with a unique name
+//     }
+// });
 
 // File upload middleware
-const upload = multer({ storage: storage });
+// const upload = multer({ storage: storage });
 
-/* GET algorithm listing. */
-router.get('/', async function(req: Request, res, next) {
-    const problems = await Problem.find({});
-    probList = [];
-    problems.forEach((obj) => {
-        let prob = {id: obj['_id'], problemName: obj['problemName'], description: obj['description'], level:obj['level']};
-        probList.push(prob);
-    });
+/* GET problem listing. */
+router.get('/', async (req: Request, res: Response) => {
+    try{
+        const problems = await Problem.find({}, 'title description level');
 
-    res.render('algorithm', {problems: probList});
+        res.json({
+            success: true,
+            problems: problems.map((p) =>({
+                id: p._id,
+                title: p.title,
+                description: p.description,
+                level: p.difficulty,
+            })),
+        });
+    } catch (err) {
+        logger.error(err);
+        res.status(500).json({success: false, message: 'Server error'});
+    }
+
 });
 
 router.get('/:problemId', async function(req: Request, res) {
@@ -77,23 +88,23 @@ router.post('/', async function(req: Request, res) {
         });
 });
 
-router.post('/upload', upload.single('file'), function(req: Request, res) {
-    try{
-        console.log(req.file);
-        const fileData = req.file.buffer.toString('utf-8');
-        console.log(filename);
-        console.log(new Date());
+// router.post('/upload', upload.single('file'), function(req: Request, res) {
+//     try{
+//         console.log(req.file);
+//         const fileData = req.file.buffer.toString('utf-8');
+//         console.log(filename);
+//         console.log(new Date());
 
-        // const algorithm = new Algorithm({
-        //     lang: path.extname(file.originalname);
-        //     solution: String,
-        //     location: String,
-        //     date: Date
-        // });
-        res.redirect('/algorithms');
-    } catch (err) {
-        console.log(err);
-    }
+//         // const algorithm = new Algorithm({
+//         //     lang: path.extname(file.originalname);
+//         //     solution: String,
+//         //     location: String,
+//         //     date: Date
+//         // });
+//         res.redirect('/algorithms');
+//     } catch (err) {
+//         console.log(err);
+//     }
 
 
 
@@ -122,6 +133,6 @@ router.post('/upload', upload.single('file'), function(req: Request, res) {
     //             error: err
     //         });
     //     });
-});
+// });
 
 module.exports = router;

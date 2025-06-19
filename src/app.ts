@@ -2,10 +2,9 @@ import createError from'http-errors';
 import express, { Request, Response, NextFunction } from 'express';
 import path from 'path';
 import cookieParser from 'cookie-parser';
-import logger from 'morgan';
+import morgan from 'morgan';
 import cors from 'cors';
 import { engine } from 'express-handlebars';
-import { config } from './config';
 
 // import indexRouter from './routes/index';
 import usersRouter from './routes/users';
@@ -20,7 +19,7 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');
 app.engine('hbs', engine({extname: 'hbs', defaultLayout: 'layout', layoutsDir: __dirname + '/views/layouts/'}));
 
-app.use(logger('dev'));
+app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());

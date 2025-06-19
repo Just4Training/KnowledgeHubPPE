@@ -1,7 +1,7 @@
 import express, { Request, Response, NextFunction }  from 'express';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-
+import logger from '@/util/logger';
 import User from '../models/User';
 import { SignupRequestBody } from '../interfaces/user';
 import { config } from '../config';
@@ -9,8 +9,14 @@ import { config } from '../config';
 const router = express.Router();
 
 /* GET users listing. */
-router.get('/', (req: Request, res: Response) => {
-    res.send('respond with a resource');
+router.get('/', async (req: Request, res: Response) => {
+    try {
+        const users = User.find({});
+        res.render('users', { userList: users });
+    } catch (err) {
+        logger.error("Error to get user list");
+        res.status(500).json({ message: "Error fetching users" });
+    }
 });
 
 // POST /users
@@ -68,16 +74,15 @@ router.post('/signup', async (req: Request<{}, {}, SignupRequestBody>, res: Resp
         const result = await user.save();
         res.status(201).json({ msg: result });
     } catch (err) {
+        logger.error(err);
         res.status(500).json({ error: err });
     }
 });
 
 router.post('/login', async (req: Request, res: Response): Promise<void> => {
     try {
-        // const user = await User.findOne({ email: req.body.email });
-        const email = "123@test.com";
-        const user = await User.findOne({ email });
-        console.log(user);
+        const email = req.body.email;
+        const user = await User.findOne({ email: email });
 
         if(!user) {
             res.status(401).json({ message: 'User not exists'});
@@ -97,7 +102,7 @@ router.post('/login', async (req: Request, res: Response): Promise<void> => {
                 userId: user._id
             },
             config.jwtSecret,
-            { expiresIn: '1h' }
+            { expiresIn: '2h' }
         );
 
         res.status(200).json({
