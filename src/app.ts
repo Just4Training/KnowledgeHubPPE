@@ -7,8 +7,8 @@ import cors from 'cors';
 import { engine } from 'express-handlebars';
 
 // import indexRouter from './routes/index';
-import usersRouter from './routes/users';
-// import algorithmRouter = require('../routes/algorithm');
+import usersRouter from '@/routes/users';
+import problemsRouter from '@/routes/problems';
 
 import { connectMongo } from './util/mongoDB';
 
@@ -50,7 +50,7 @@ app.use(cors({
 
 // app.use('/', indexRouter);
 app.use('/users', usersRouter);
-// app.use('/algorithms', algorithmRouter);
+app.use('/problems', problemsRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req: Request, res: Response, next: NextFunction) {

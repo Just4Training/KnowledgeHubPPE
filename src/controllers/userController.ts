@@ -1,29 +1,27 @@
-import express, { Request, Response, NextFunction }  from 'express';
+import { Request, Response }  from 'express';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import logger from '@/util/logger';
-import User from '../models/User';
+import User from '@/models/User';
 import { SignupRequestBody } from '../interfaces/user';
 import { config } from '../config';
 
-const router = express.Router();
-
 /* GET users listing. */
-router.get('/', async (req: Request, res: Response) => {
+export const getUsers = async (req: Request, res: Response) => {
     try {
         const users = User.find({});
-        res.render('users', { userList: users });
+        res.json({ users });
     } catch (err) {
         logger.error("Error to get user list");
         res.status(500).json({ message: "Error fetching users" });
     }
-});
+};
 
-// POST /users
-router.post('/', (req: Request, res: Response) => {
-  console.log(req.body);
-  res.status(200).json({msg: 'wtf'});
-});
+// get user by id
+// const getUserById = (req: Request, res: Response) => {
+//   const userId = req.params.id;
+//   res.status(200).json({msg: 'wtf'});
+// });
 
 // router.post('/signup', async (req: Request<{}, {}, SignupRequestBody>, res: Response) => {
 //     try {
@@ -51,8 +49,8 @@ router.post('/', (req: Request, res: Response) => {
 //     }
 // });
 
-// POST /users/signup
-router.post('/signup', async (req: Request<{}, {}, SignupRequestBody>, res: Response): Promise<void> => {
+// Users signup
+export const signup = async (req: Request<{}, {}, SignupRequestBody>, res: Response) => {
     try {
         const exsitingUsers = await User.find({ email: req.body.email }).exec();
 
@@ -77,9 +75,10 @@ router.post('/signup', async (req: Request<{}, {}, SignupRequestBody>, res: Resp
         logger.error(err);
         res.status(500).json({ error: err });
     }
-});
+};
 
-router.post('/login', async (req: Request, res: Response): Promise<void> => {
+// User login
+export const login = async (req: Request, res: Response) => {
     try {
         const email = req.body.email;
         const user = await User.findOne({ email: email });
@@ -99,11 +98,10 @@ router.post('/login', async (req: Request, res: Response): Promise<void> => {
         const token = jwt.sign(
             {
                 email: user.email,
-                userId: user._id,
-                isAdmin: user.isAdmin
+                userId: user._id
             },
             config.jwtSecret,
-            { expiresIn: '1h' }
+            { expiresIn: '2h' }
         );
 
         res.status(200).json({
@@ -118,6 +116,4 @@ router.post('/login', async (req: Request, res: Response): Promise<void> => {
         });
         return;
     }
-});
-
-export default router;
+};
