@@ -16,10 +16,15 @@ export interface IProblem extends Document {
 const problemSchema: Schema = new mongoose.Schema({
     title: { type: String, required: true },
     description: { type: String, required: true },
+    difficulty: {type: String, enum: ProblemDifficulty, required: true },
     leetcode: Number,
-    difficulty: ProblemDifficulty,
-    level: String
-}, { collection: 'test'});
+    testCases:[
+        {
+            input: { type: String, required: true },
+            expectedOutput: { type: String, required: true }
+        }
+    ]
+});
 
 const Problem: Model<IProblem> = mongoose.model<IProblem>('Problem', problemSchema, 'problem');
 

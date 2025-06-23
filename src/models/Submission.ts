@@ -18,8 +18,8 @@ const SubmissionSchema: Schema = new Schema({
     langguage: { type: String, required: true },
     result: { type: String, enum: SubmissionStatus},
     createAt: { type: Date, default: Date.now }
-}, { collection: 'test' });
+});
 
-const Submission = mongoose.model<ISubmission>('Submission', SubmissionSchema);
+const Submission = mongoose.model<ISubmission>('Submission', SubmissionSchema, 'submission');
 
 export default Submission;
