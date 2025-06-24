@@ -2,9 +2,10 @@ import express, { Request, Response, NextFunction }  from 'express';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import logger from '@/util/logger';
-import User from '../models/User';
+import User from '@/models/User';
+import { getSubmissionByUser } from '@/controllers/submissionController';
 import { SignupRequestBody } from '../interfaces/user';
-import { config } from '../config';
+import { config } from '@/config';
 
 const router = express.Router();
 
@@ -25,31 +26,8 @@ router.post('/', (req: Request, res: Response) => {
   res.status(200).json({msg: 'wtf'});
 });
 
-// router.post('/signup', async (req: Request<{}, {}, SignupRequestBody>, res: Response) => {
-//     try {
-//         const exsitingUsers = await User.findOne({ email: req.body.email }).exec();
-
-//         if(exsitingUsers) {
-//             return res.status(409).json({
-//                 message: 'Email exists'
-//             });
-//         }
-
-//         const hash = await bcrypt.hash(req.body.password, 10);
-
-//         const user = new User({
-//             username: req.body.username,
-//             email: req.body.email,
-//             password: hash,
-//             isAdmin: false
-//         });
-
-//         const result = await user.save();
-//         res.status(201).json({ msg: "result" });
-//     } catch (err) {
-//         res.status(500).json({ error: err });
-//     }
-// });
+// GET all submission from user
+router.get('/:userId/submissions', getSubmissionByUser);
 
 // POST /users/signup
 router.post('/signup', async (req: Request<{}, {}, SignupRequestBody>, res: Response): Promise<void> => {
