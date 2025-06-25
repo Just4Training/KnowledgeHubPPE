@@ -40,6 +40,20 @@ export const getSubmissionByUser = async (req: Request, res: Response) => {
     }
 };
 
+export const getSubmissionByProblem = async (req: Request, res: Response) => {
+    const problemId = req.params.problemId;
+
+    try {
+        const submissions = await Submission.find({ problem: problemId }).sort({ createdAt: -1 });
+        res.status(200).json(submissions); // no code content, just metadata
+        return;
+    } catch (err) {
+        logger.error('Error fetching submissions by problem:', err);
+        res.status(500).json({ message: 'Internal server error' });
+        return;
+    }
+}
+
 export const createSubmission = async (req: Request, res: Response) => {
     const { user, problem, code, language } = req.body;
 
