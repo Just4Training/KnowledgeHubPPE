@@ -4,7 +4,7 @@ import jwt from 'jsonwebtoken';
 import logger from '@/util/logger';
 import User from '@/models/User';
 import { SignupRequestBody } from '../interfaces/user';
-import { config } from '../config';
+import { config } from '@/config';
 
 /* GET users listing. */
 export const getUsers = async (req: Request, res: Response) => {

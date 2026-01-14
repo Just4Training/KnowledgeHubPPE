@@ -9,6 +9,7 @@ import { engine } from 'express-handlebars';
 // import indexRouter from './routes/index';
 import usersRouter from '@/routes/users';
 import problemsRouter from '@/routes/problems';
+import submissionRouter from '@/routes/submission';
 
 import { connectMongo } from './util/mongoDB';
 
@@ -51,6 +52,7 @@ app.use(cors({
 // app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/problems', problemsRouter);
+app.use('/submissions', submissionRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req: Request, res: Response, next: NextFunction) {

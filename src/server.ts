@@ -4,7 +4,7 @@ import app from './app';
 import debug from 'debug';
 import http from 'http';
 
-import { config } from './config';
+import { config } from '@/config';
 /**
  * Get port from environment and store in Express.
  */

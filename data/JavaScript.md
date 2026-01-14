@@ -4,6 +4,10 @@
 ### Array
 - shift
 
+### String
+#### primitive string and Object String
+
+
 ### Commond JS vs ES6
 - **CommonJS:** This module system originated in the Node.js environment. It was created before JavaScript had its own module system, and it's still the most common system in Node.js projects today.
 - **ES6 Modules:** Introduced as part of ECMAScript 2015 (ES6), this module system is natively supported in modern browsers and is becoming the standard for JavaScript, especially for frontend development.
