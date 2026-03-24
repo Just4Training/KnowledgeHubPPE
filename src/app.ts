@@ -10,6 +10,7 @@ import { engine } from 'express-handlebars';
 import usersRouter from '@/routes/users';
 import problemsRouter from '@/routes/problems';
 import submissionRouter from '@/routes/submission';
+import blogRouter from '@/routes/blog';
 
 import { connectMongo } from './util/mongoDB';
 
@@ -20,6 +21,14 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');
 app.engine('hbs', engine({extname: 'hbs', defaultLayout: 'layout', layoutsDir: __dirname + '/views/layouts/'}));
 
+// CORS
+app.use(cors({
+    origin: 'http://localhost:3000',
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization']
+}));
+
 app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -29,11 +38,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 // Connect DB
 connectMongo('mydb');
 
-// CORS
-app.use(cors({
-    origin: 'http://localhost:3000',
-    credentials: true
-}));
+
 // app.use((req: Request, res: Response, next: NextFunction): void | Promise<void> => {
 //     res.header('Access-Control-Allow-Origin', '*');
 //     res.header('Access-Control-Allow-Methods', 'PUT, POST, PATCH, DELETE, GET');
@@ -53,6 +58,7 @@ app.use(cors({
 app.use('/users', usersRouter);
 app.use('/problems', problemsRouter);
 app.use('/submissions', submissionRouter);
+app.use('/blogs', blogRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req: Request, res: Response, next: NextFunction) {

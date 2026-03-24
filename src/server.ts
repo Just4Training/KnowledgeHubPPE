@@ -1,16 +1,44 @@
 #!/usr/bin/env node
 
+
+/**
+ * Load Environment
+ */
+
+import { config, loadEnv } from '@/config';
+loadEnv();
+
 import app from './app';
 import debug from 'debug';
 import http from 'http';
 
-import { config } from '@/config';
+
+const log = debug('server');
+
+/**
+ * Normalize port
+ */
+
+function normalizePort(val: string): number | string  {
+  const port = parseInt(val, 10);
+
+  if (isNaN(port)) {
+    return val;    // named pipe
+  }
+
+  if (port >= 0) {
+    return port;    // port number
+  }
+
+  throw new Error(`Invalid port: ${val}`);
+}
+
 /**
  * Get port from environment and store in Express.
  */
-
-const port = normalizePort(config.port || '8000');
+const port = normalizePort(config.port ?? '8000');
 app.set('port', port);
+
 
 /**
  * Create HTTP server.
@@ -26,23 +54,7 @@ server.listen(port);
 server.on('error', onError);
 server.on('listening', onListening);
 
-/**
- * Normalize a port into a number, string, or false.
- */
 
-function normalizePort(val: string): number | string | false {
-  const port = parseInt(val, 10);
-
-  if (isNaN(port)) {
-    return val;    // named pipe
-  }
-
-  if (port >= 0) {
-    return port;    // port number
-  }
-
-  return false;
-}
 
 /**
  * Event listener for HTTP server "error" event.
