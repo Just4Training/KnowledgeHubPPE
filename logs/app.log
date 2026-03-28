@@ -2,3 +2,22 @@
 [2025-06-19T05:38:20.641Z] ERROR: Problem validation failed: title: Path `title` is required.
 [2025-06-24T19:39:56.316Z] ERROR: Error creating submission: Submission validation failed: langguage: Path `langguage` is required., result: `Pending` is not a valid enum value for path `result`.
 [2025-06-24T19:41:41.672Z] ERROR: Error creating submission: Submission validation failed: langguage: Path `langguage` is required.
+[2026-01-15T09:19:16.738Z] ERROR: Error in upload middleware: Error: Resolved credential object is not valid
+[2026-01-15T09:32:01.466Z] ERROR: Error in upload middleware: NoSuchBucket: The specified bucket does not exist.
+[2026-01-15T09:33:51.265Z] ERROR: Error in upload middleware: NoSuchBucket: The specified bucket does not exist.
+[2026-01-15T09:36:10.918Z] INFO: Image uploaded to R2: https://pub-4fb729c63565499ca67fbf6bd8706f5b.r2.dev/blog/1768469770017-1ebc53efbc13.png
+[2026-01-16T07:15:22.521Z] ERROR: Error creating system design: ValidationError: author: Cast to ObjectId failed for value "testUser" (type string) at path "author" because of "BSONError", category: Path `category` is required., content: Content must have at least one block
+[2026-01-16T07:15:57.282Z] ERROR: Error creating system design: ValidationError: category: Path `category` is required., content: Content must have at least one block
+[2026-01-16T07:28:26.062Z] ERROR: Error creating system design: ValidationError: content: Content must have at least one block
+[2026-01-16T07:29:31.903Z] ERROR: Error creating system design: ValidationError: content: Cast to embedded failed for value "This is the test of create new blogs" (type string) at path "content" because of "ObjectParameterError"
+[2026-01-16T07:31:43.463Z] ERROR: Error creating system design: ValidationError: content: Cast to embedded failed for value "This is the test of create new blogs" (type string) at path "content" because of "ObjectParameterError"
+[2026-01-25T09:05:59.839Z] ERROR: User validation failed: username: Path `username` is required.
+[2026-01-25T09:06:40.456Z] ERROR: User validation failed: username: Path `username` is required.
+[2026-01-25T09:08:21.798Z] ERROR: User validation failed: username: Path `username` is required.
+[2026-01-25T09:08:55.239Z] ERROR: User validation failed: username: Path `username` is required.
+[2026-01-25T09:17:06.882Z] ERROR: User validation failed: username: Path `username` is required.
+[2026-01-25T09:20:09.510Z] ERROR: User validation failed: username: Path `username` is required.
+[2026-01-25T09:25:03.586Z] ERROR: User validation failed: username: Path `username` is required.
+[2026-01-25T09:26:02.252Z] ERROR: User validation failed: username: Path `username` is required.
+[2026-01-25T09:26:51.905Z] ERROR: User validation failed: username: Path `username` is required.
+[2026-01-25T09:29:16.994Z] ERROR: User validation failed: username: Path `username` is required.
